@@ -1,0 +1,165 @@
+import random
+
+class stats():
+    health = 10
+    max_health =10
+    arrows = 15
+    bow_type = 'self bow'
+    ma_bow = 4
+    mi_bow = 0
+    coin = 10
+    xp = 10
+    next_level = 15
+    level = 1
+    East = 0
+
+bows = {
+    'longb' : [15, 2,7, 'longbow'],
+    'recurve' : [30, 5,10, 'recurve'],
+    'enchanted' : [70, 8,20, 'enchanted bow'],
+    'diamondcrest' : [150, 15, 30, 'diamondcrest bow']
+}
+
+#health, mi_attack, ma_attack, xp, gold, name
+cat = [1, 0, 1, 1, 0,'feral cat']
+wolf = [1,1,2,1, 0, 'wolf']
+orc = [1, 1, 3, 2, random.randint(0,1), 'orc']
+warrior = [2,2,3,2, random.randint(0,5), 'warrior']
+wood_elf = [3,3,3,4, random.randint(0,10), 'wood elf']
+knight = [4, 3, 4, 5, random.randint(5,15), 'knight']
+ogre = [3, 3,6, 8, random.randint(0,5), 'ogre']
+troll = [4, 4, 7,15, random.randint(0,5), 'cave troll' ]
+warlock = [3, 5, 10, 15, random.randint(0,50), 'warlock']
+water_demon = [4, 5, 12, 20, random.randint(0,50), 'water demon']
+fire_demon = [5, 7,15, 25, random.randint(0,100), 'fire demon']
+siren = [1, 0, 30, 50, 100, 'siren']
+dragon = [10, 25, 50, 100, 1000, 'dragon']
+
+
+
+room = {
+    '1' : [cat, wolf, 0],
+    '2' : [cat, wolf, orc, 0],
+    '3' : [orc, wolf, warrior, 0],
+    '4' : [orc, wolf, warrior, warrior, wood_elf, wood_elf, knight, 0],
+    '5' : [warrior, wood_elf,knight, knight, ogre, ogre, 0],
+    '6' : [wood_elf, knight, ogre, ogre, troll],
+    '7' : [knight, ogre, troll, troll, warlock],
+    '8' : [troll, warlock, fire_demon, water_demon],
+    '9' : [warlock, fire_demon, water_demon, siren],
+    '10': [dragon]
+    
+    }
+
+
+def distance_meter():
+    meter = (' . . . . . . . . . ')    
+    print('Village', meter [:stats.East*2-1] + 'x '+ meter[stats.East*2-1:], 'Castle')
+    wait = input()
+    
+def encounter_enemy():
+    
+    encounter = random.choice(room[str(stats.East)])
+    if encounter == 0:
+        print("Your movement is undetected.")
+        distance_meter()
+    else:
+        distance_meter()
+        print ("Encounter: You are attacked by a", encounter[5], '!')
+        wait = input()
+        battle(encounter)
+    move()
+    
+
+def stat_change(changes): 
+    stats.health -= changes[0]
+    stats.arrows -= changes[1]
+    stats.xp += changes[2]
+    print('health: ',stats.health,'/',stats.max_health)
+    print('arrows: ',stats.arrows)
+    print('bow:', stats.bow_type)
+    print('coin: ', stats.coin)
+    print('xp: ', stats.xp)
+    print('level: ', stats.level)
+    wait = input()
+
+    
+def battle(enemy):
+    p_attack = random.randint(stats.mi_bow,stats.ma_bow)
+    e_attack = random.randint(enemy[1],enemy[2])
+    wait = input('The fight is fierce.')
+    wait = input('You shoot...')
+    if p_attack > e_attack:
+        wait = input('...and hit!')
+        print()
+        print('Success! You killed the', enemy[5])
+        print('You used ', enemy[0], ' arrows.')
+        print()
+       #Level up process
+        if stats.xp >= stats.next_level:
+            stats.level +=1
+            stats.next_level *=1.5
+            stats.max_health = int(maxhealth*1.3)
+            wait = input()
+            print('Level up!')
+            print('You have reached level ', stats.level)
+            wait = input()
+            
+        stat_change([0, enemy[0], enemy[2]])
+    else:
+        wait = input('...and miss')
+        print()
+        print('Failure.')
+        print()
+        print('You used ', enemy[0], ' arrows.')
+        print()
+        stat_change([e_attack, enemy[0], 0])
+
+
+def move():
+    go = input('Head East or West?')
+    print()
+    if go.upper() == 'E':
+        stats.East +=1
+        if stats.East < 1:
+            stats.East = 1
+        print('You go East.')
+    elif go.upper() == 'W':
+        stats.East -=1
+        print('You go West.')
+        if stats.East > 10:
+            stats.East = 10
+    else:
+        print('Command not recognized. Make sure to choose either E or W.')
+        move()
+    encounter_enemy()
+    
+
+print('Hello archer. You are in a small village. Your quest is to trek through an enchanted forest to save a princess from a dragon in a castle.')
+move()
+
+
+
+
+print('        My hero!   ')
+print()
+print('          W W     ')
+print('         WWWWW')
+print('        ((. .))    ')
+print('       ))) - (((	  ')
+print('      (((`...\')))       ')
+print('      ))))    (((   	      ')
+print('      /   \  /   \\')
+print('     / /(  \/  )\ \\')
+print('    / /  \    /  \ \\')
+print('   @@@@  / \/ \  @@@@')
+print('   (v   /      \   v)  ')
+print('       @@@@@@@@@@')
+print('      /          \\')
+print('     /            \\')
+print('    @@@@@@@@@@@@@@@@')
+print('   /                \\')
+print('  /                  \\')
+print(' @@@@@@@@@@@@@@@@@@@@@@')
+print(' /                    \\')
+print('@@@@@@@@@@@@@@@@@@@@@@@@ ')
